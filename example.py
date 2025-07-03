@@ -43,9 +43,9 @@ def _():
     ### Заголовок третьего уровня
 
     Вот список:
-    *   Элемент списка 1
-    *   Элемент списка 2
-        *   Подэлемент списка
+    -   Элемент списка 1
+    -   Элемент списка 2
+        -   Подэлемент списка
 
     Вот цитата:
     > Это цитата.
@@ -71,7 +71,14 @@ def _(examples):
     def render_example(example):
         html = markdown.markdown(
             example['text'],
-            extensions=[TableExtension()]
+            extensions=[
+                'markdown.extensions.extra',
+                'markdown.extensions.sane_lists',
+                'markdown.extensions.nl2br',
+                TableExtension(),
+                'toc'
+            ],
+            output_format='html5'
         )
         return html
 

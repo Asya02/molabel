@@ -134,23 +134,33 @@ function render({ model, el }) {
     // Update example display
     if (examples.length > 0 && currentIndex < examples.length) {
       const currentExample = examples[currentIndex];
+      let htmlContent = '';
 
-      // Всегда используем HTML-рендеринг
       if (currentExample._html) {
-        exampleContainer.innerHTML = currentExample._html;
+        htmlContent = currentExample._html;
       } else {
-        // Если _html нет, создаем его на лету
         const htmlContent = renderExample(currentExample);
-        exampleContainer.innerHTML = htmlContent;
-
-        // Обновляем пример в модели (опционально)
-        const updatedExamples = [...examples];
-        updatedExamples[currentIndex] = {
-          ...currentExample,
-          _html: htmlContent
-        };
-        model.set('examples', updatedExamples);
       }
+      // target="_blank" to all links
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlContent, 'text/html');
+      const links = doc.querySelectorAll('a');
+
+      links.forEach(link => {
+        if (!link.hasAttribute('target')) {
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noopener noreferrer');
+        }
+      });
+      exampleContainer.innerHTML = doc.body.innerHTML;
+
+      // Обновляем пример в модели (опционально)
+      const updatedExamples = [...examples];
+      updatedExamples[currentIndex] = {
+        ...currentExample,
+        _html: htmlContent
+      };
+      model.set('examples', updatedExamples);
     } else {
       exampleContainer.textContent = 'No examples to display';
     }
