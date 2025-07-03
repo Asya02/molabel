@@ -154,7 +154,6 @@ function render({ model, el }) {
       });
       exampleContainer.innerHTML = doc.body.innerHTML;
 
-      // Обновляем пример в модели (опционально)
       const updatedExamples = [...examples];
       updatedExamples[currentIndex] = {
         ...currentExample,
